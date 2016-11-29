@@ -1,0 +1,682 @@
+<!--Saved by Quest 5.6.6107.39755-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Find your way around Temple (Don't get stabbed)">
+    <inherit name="theme_retro" />
+    <gameid>1ea80a2b-32e5-4058-935d-e1604cac5ba9</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+    <menufont>Georgia, serif</menufont>
+    <gridmap />
+    <feature_pictureframe />
+    <pov type="object">Player</pov>
+  </game>
+  <object name="straight ghetto">
+    <inherit name="editor_room" />
+    <objectslistprefix>You can see darkness</objectslistprefix>
+    <enter type="script">
+      finish
+      picture ("mcpoyles.jpg")
+      msg ("You are a loser. You been stabbed.")
+    </enter>
+    <exit alias="down" to="Sewer 2">
+      <inherit name="downdirection" />
+    </exit>
+    <exit alias="south" to="Cummys">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="Cummys">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <verb>
+    <property>dropbookoff</property>
+    <pattern>drop book off</pattern>
+    <defaultexpression>"You can't drop book off " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>view</property>
+    <pattern>view</pattern>
+    <defaultexpression>"You can't view " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>ripthatshit.</property>
+    <pattern>rip that shit.</pattern>
+    <defaultexpression>"You can't rip that shit. " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>ripthatshit</property>
+    <pattern>rip that shit</pattern>
+    <defaultexpression>"You can't rip that shit " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>unlocklibrary</property>
+    <pattern>unlock library</pattern>
+    <defaultexpression>"You can't unlock library " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>pickupneedle</property>
+    <pattern>pick up needle</pattern>
+    <defaultexpression>"You can't pick up needle " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>leaveitalone</property>
+    <pattern>leave it alone</pattern>
+    <defaultexpression>"You can't leave it alone " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>stophim</property>
+    <pattern>stop him</pattern>
+    <defaultexpression>"You can't stop him " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>leavehimtohisbusiness</property>
+    <pattern>leave him to his business</pattern>
+    <defaultexpression>"You can't leave him to his business " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="active_events">
+    <inherit name="editor_room" />
+    <turnscript name="Taxi Cab">
+      <enabled />
+      <script>
+        SetTurnTimeout (5) {
+          msg ("A rusty decrepit taxi pulls up and the door opens.  The driver asks you if you would like a ride? ")
+          picture ("")
+          MakeObjectVisible (taxi cab)
+          MoveObjectHere (taxi cab)
+        }
+      </script>
+    </turnscript>
+    <object name="taxi cab">
+      <inherit name="editor_object" />
+      <useindividualverblist />
+      <getincab type="script">
+        finish
+        msg ("You get in the taxi and ask the driver to take you home.  He mumbles something unintelligible and drives in a seemingly objectiveness manner.  This was the last time you were ever seen.")
+      </getincab>
+      <walkawaywithoutsayinganything type="script">
+        msg ("You quickly walk away from the cab without answering him.")
+      </walkawaywithoutsayinganything>
+    </object>
+  </object>
+  <object name="dead_events">
+    <inherit name="editor_room" />
+  </object>
+  <object name="East Campus">
+    <inherit name="editor_room" />
+    <object name="anderson">
+      <inherit name="editor_room" />
+      <enter type="script">
+        if (not Got(Book)) {
+          UnlockExit (anderson to train station)
+          msg ("You are free to leave campus")
+        }
+      </enter>
+      <exit alias="west" to="Bell Tower">
+        <inherit name="westdirection" />
+      </exit>
+      <exit name="anderson to train station" alias="east" to="train station">
+        <inherit name="eastdirection" />
+        <locked />
+        <lockmessage>-You are unable to leave campus without returning your book to the library.</lockmessage>
+      </exit>
+    </object>
+    <object name="train station">
+      <inherit name="editor_room" />
+      <beforeenter type="script">
+        if (not Got(Book)) {
+          UnlockExit (anderson to train station)
+          msg ("You are free to leave campus")
+        }
+      </beforeenter>
+      <enter type="script">
+        finish
+        msg ("You finally make it to the train station and go home.")
+      </enter>
+    </object>
+    <object name="Paley">
+      <inherit name="editor_room" />
+      <descprefix>You are in the library</descprefix>
+      <objectslistprefix>You can see Book Drop</objectslistprefix>
+      <beforeenter type="script">
+      </beforeenter>
+      <exit alias="north" to="Bell Tower">
+        <inherit name="northdirection" />
+        <lockmessage>-That way is locked.</lockmessage>
+      </exit>
+      <object name="Book Drop">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <feature_container />
+        <attr name="feature_usegive" type="boolean">false</attr>
+        <displayverbs type="stringlist">
+          <value>Look at</value>
+          <value>Take</value>
+          <value>Open</value>
+          <value>Close</value>
+          <value>Drop book off</value>
+        </displayverbs>
+        <useindividualverblist />
+        <dropbookoff type="script">
+          MoveObject (Book, Book Drop)
+        </dropbookoff>
+        <use type="script">
+          MoveObject (Book, Book Drop)
+          MoveObject (, )
+        </use>
+        <onopen type="script">
+          MoveObject (Book, Book Drop)
+        </onopen>
+      </object>
+    </object>
+    <object name="Bell Tower">
+      <inherit name="editor_room" />
+      <descprefix>You are at the</descprefix>
+      <description>{img:bell tower.jpg}</description>
+      <objectslistprefix>You can see Paley, Beury, Anderson</objectslistprefix>
+      <exit alias="north" to="Narnia">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="east" to="anderson">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="west" to="polett liacouras">
+        <inherit name="westdirection" />
+      </exit>
+      <object name="Player">
+        <inherit name="editor_object" />
+        <object name="Book">
+          <inherit name="editor_object" />
+          <feature_usegive />
+        </object>
+      </object>
+      <exit name="library lock" alias="south" to="Paley">
+        <inherit name="southdirection" />
+        <locked />
+        <lockmessage>You are not allowed to enter the library without your I.D.  You can't remember where exactly you left your I.D. but the last time you used it was at the security desk at Johnson and Hardwick so that's probably the best place to start.</lockmessage>
+      </exit>
+      <object name="library entrance card reader">
+        <inherit name="editor_object" />
+        <feature_usegive />
+        <useindividualverblist />
+        <useanything type="script">
+          UnlockExit (library lock)
+          if (Got(ID card)) {
+          }
+        </useanything>
+        <unlocklibrary type="script">
+          if (Got(ID card)) {
+            UnlockExit (library lock)
+            msg ("You can now enter the Library.")
+          }
+          if (not Got(ID card)) {
+            msg ("You need to get your I.D. card to access the library.")
+          }
+        </unlocklibrary>
+        <useon type="scriptdictionary" />
+      </object>
+    </object>
+    <object name="Narnia">
+      <inherit name="editor_room" />
+      <descprefix>You are in</descprefix>
+      <objectslistprefix>You can see a bong on a table</objectslistprefix>
+      <exit alias="south" to="Bell Tower">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="west" to="barton 7 11">
+        <inherit name="westdirection" />
+      </exit>
+      <object name="Bong">
+        <inherit name="editor_object" />
+        <take type="boolean">false</take>
+        <displayverbs type="stringlist" />
+        <inventoryverbs type="stringlist" />
+        <linkcolour>Green</linkcolour>
+        <ripthatshit type="script">
+          MoveObject (Player, barton 7 11)
+          JS.
+          msg ("-You got toasted and ended up at sev buying 4 slices of \"pizza\"")
+        </ripthatshit>
+      </object>
+      <object name="Guy Sitting at bench">
+        <inherit name="editor_object" />
+        <inherit name="male" />
+        <look>The guy is wearing a beanie and does not have shoes on.  You also notice he has a joint in his hand.  </look>
+        <nah>You: nah</nah>
+        <buyweed type="script"><![CDATA[
+          msg ("Guy: You want some reefer for 20 bones?<br/><br/>You: Sure.")
+          MoveObject (Bag O Weed, Player)
+        ]]></buyweed>
+        <object name="Bag O Weed">
+          <inherit name="editor_object" />
+        </object>
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>getincab</property>
+    <pattern>get in cab</pattern>
+    <defaultexpression>"You can't get in cab " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>walkawaywithoutsayinganything</property>
+    <pattern>walk away without saying anything</pattern>
+    <defaultexpression>"You can't walk away without saying anything " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>talktohim</property>
+    <pattern>talk to him</pattern>
+    <defaultexpression>"You can't talk to him " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>walkoverandtakealook</property>
+    <pattern>walk over and take a look</pattern>
+    <defaultexpression>"You can't walk over and take a look " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>ignoretherockandkeepmoving</property>
+    <pattern>ignore the rock and keep moving</pattern>
+    <defaultexpression>"You can't ignore the rock and keep moving " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="West Campus">
+    <inherit name="editor_room" />
+    <object name="polett liacouras">
+      <inherit name="editor_room" />
+      <exit alias="east" to="Bell Tower">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="west" to="mitten hall on broad">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="north" to="barton 7 11">
+        <inherit name="northdirection" />
+      </exit>
+      <object name="Man stomping rats">
+        <inherit name="editor_object" />
+        <look>When you look closer you see that the man is furiously stomping rats coming out of a hole in the wall.  You can see that he has already stomped several dozen rats.  </look>
+        <leavehimtohisbusiness>You ignore the man and continue on your way.</leavehimtohisbusiness>
+        <useindividualverblist />
+        <stophim type="script">
+          finish
+          msg ("You stop the man from stomping the rats by threatening to call the police.  The man reluctantly obliges.  You start to walk away but then notice that hundreds of rats are flooding out of the hole.  The rats swarm you and pull you into a nearby sewer grate, you are never heard from again.")
+          picture ("rat.jpeg")
+        </stophim>
+      </object>
+    </object>
+    <object name="mitten hall on broad">
+      <inherit name="editor_room" />
+      <attr name="grid_fill">Red</attr>
+      <exit alias="east" to="polett liacouras">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="west" to="straight ghetto">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="north" to="pea body broad">
+        <inherit name="northdirection" />
+      </exit>
+      <object name="Homeless Man">
+        <inherit name="editor_object" />
+        <inherit name="male" />
+        <gender>He</gender>
+        <article>he</article>
+        <useindividualverblist />
+      </object>
+      <exit name="Sewer exit" alias="down" to="Sewer 1">
+        <inherit name="downdirection" />
+        <visible type="boolean">false</visible>
+      </exit>
+    </object>
+    <object name="barton 7 11">
+      <inherit name="editor_room" />
+      <descprefix>You are at barton hall 711</descprefix>
+      <objectslistprefix>You can see </objectslistprefix>
+      <exit alias="south" to="polett liacouras">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="east" to="Narnia">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="west" to="pea body broad">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="northwest" to="johnson hardwick">
+        <inherit name="northwestdirection" />
+      </exit>
+      <object name="ground needle">
+        <inherit name="editor_object" />
+        <look type="string"></look>
+        <pickupneedle>You pick up the needle and accidently prick your finger.  You have contracted full blown AIDS.  You can keep playing the game but you have AIDS now, don't pick up ground needles.  </pickupneedle>
+        <useindividualverblist />
+        <leaveitalone>You leave the needle on the ground and proceed.</leaveitalone>
+      </object>
+    </object>
+    <object name="pea body broad">
+      <inherit name="editor_room" />
+      <attr name="grid_fill">Red</attr>
+      <exit alias="east" to="barton 7 11">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="south" to="mitten hall on broad">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="west" to="straight ghetto">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="north" to="johnson hardwick">
+        <inherit name="northdirection" />
+      </exit>
+      <object name="Out of place rock">
+        <inherit name="editor_object" />
+        <useindividualverblist />
+        <ignoretherockandkeepmoving>You continue on your way without giving the rock a second thought.</ignoretherockandkeepmoving>
+        <walkoverandtakealook type="script">
+          MakeExitVisible (Sewer exit)
+          msg ("You pull on the rock and it gives way easily.  Behind the rock are directions to a way to get in the sewer system and seems like a possible way to get to the train station.  The directions say that the sewer is by mitten hall.  Take the exit if you trust it.")
+          picture ("sewer entry.jpeg")
+          MoveObjectHere (Player)
+        </walkoverandtakealook>
+      </object>
+    </object>
+    <object name="johnson hardwick">
+      <inherit name="editor_room" />
+      <descprefix>You are in johnson hardwick</descprefix>
+      <objectslistprefix>You can see security desk with ID on it</objectslistprefix>
+      <attr name="grid_fill">Red</attr>
+      <exit alias="south" to="pea body broad">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="southeast" to="barton 7 11">
+        <inherit name="southeastdirection" />
+      </exit>
+      <exit alias="north" to="straight ghetto">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="west" to="straight ghetto">
+        <inherit name="westdirection" />
+      </exit>
+      <object name="security desk">
+        <inherit name="editor_object" />
+        <view type="string"></view>
+        <feature_container />
+        <useindividualverblist />
+        <look>The unexciting brown desk contains a computer, some papers, and in a pile of IDs you can make out your I.D.  Now you just have to get it from the security guard.</look>
+      </object>
+      <object name="Security Guard">
+        <inherit name="editor_object" />
+        <inherit name="female" />
+        <look>The security guard looks bored and disinterested.  When she notices you looking at her she makes a face and then goes back to playing on her phone.  </look>
+        <walkaway>You leave without saying anything.</walkaway>
+        <askaboutid type="script">
+          msg ("You: Hi would you be able to let me in, I think I left my ID in my room.")
+          msg ("Guard: I can't let anyone in without an ID.")
+          msg ("You: My IDs in my room if you let me in I can get it.")
+          msg ("Guard: I can't let anyone in without an ID.")
+          msg ("You: How can I get you to let me in?")
+          msg ("Guard: bring me something to make it worth my while.")
+        </askaboutid>
+        <askwhereyoucouldgetsomethingforher type="script">
+          msg ("You: Where would I be able to get something worth your while?")
+          msg ("Guard: Thats your problem but I'll take booze or some weed I wasn't able to confiscate any today.")
+        </askwhereyoucouldgetsomethingforher>
+        <askhowtogettotrainstation type="script">
+          msg ("You: How do I get to the train station?")
+          msg ("Guard: East of the Train station")
+        </askhowtogettotrainstation>
+        <exchangeforidcard type="script">
+          if (Got(Bag O Weed)) {
+            MoveObject (ID card, Player)
+            MoveObject (Bag O Weed, Security Guard)
+          }
+        </exchangeforidcard>
+        <object name="ID card">
+          <inherit name="editor_object" />
+          <feature_usegive />
+          <use type="boolean">false</use>
+          <take />
+          <useindividualverblist />
+          <visible />
+          <selfuseanything type="script">
+            UnlockExit (library lock)
+            if (GetBoolean(library entrance, "ID to Library")) {
+            }
+          </selfuseanything>
+          <givetoanything type="script">
+            if (Got()) {
+            }
+          </givetoanything>
+          <giveto type="scriptdictionary" />
+        </object>
+      </object>
+    </object>
+  </object>
+  <verb>
+    <property>feelfordirectionofbreeze</property>
+    <pattern>feel for direction of breeze</pattern>
+    <defaultexpression>"You can't feel for direction of breeze " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>ignoreit</property>
+    <pattern>ignore it</pattern>
+    <defaultexpression>"You can't ignore it " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>testtoseewhatdirectionthebreezeisblowing.</property>
+    <pattern>test to see what direction the breeze is blowing.</pattern>
+    <defaultexpression>"You can't test to see what direction the breeze is blowing. " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>checkwhatdirectionthebreezeiscomingfrom</property>
+    <pattern>check what direction the breeze is coming from</pattern>
+    <defaultexpression>"You can't check what direction the breeze is coming from " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Sewer system">
+    <inherit name="editor_room" />
+    <picture>sewer pic.jpeg</picture>
+    <object name="Sewer 1">
+      <inherit name="editor_room" />
+      <alias>Sewer</alias>
+      <picture>sewer pic.jpeg</picture>
+      <enter type="script">
+        msg ("You look through the sewer and see that there are several exits but your sure not which one to choose")
+      </enter>
+      <exit alias="up" to="mitten hall on broad">
+        <inherit name="updirection" />
+      </exit>
+      <exit alias="west" to="Sewer 2">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="east" to="Sewer 4">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="north" to="Sewer 3">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <object name="Sewer 2">
+      <inherit name="editor_room" />
+      <alias>Sewer</alias>
+      <enter type="script">
+        msg ("The smell is terrible.")
+      </enter>
+      <exit alias="east" to="Sewer 1">
+        <inherit name="eastdirection" />
+      </exit>
+      <exit alias="up" to="straight ghetto">
+        <inherit name="updirection" />
+      </exit>
+      <object name="Breeze 2">
+        <inherit name="editor_object" />
+        <checkwhatdirectionthebreezeiscomingfrom>The breeze appears to be coming from the west.  Strange, you wouldn't think the train station would be this direction.</checkwhatdirectionthebreezeiscomingfrom>
+        <ignoreit>Disregard the breeze and keep moving.</ignoreit>
+        <alias>Breeze</alias>
+      </object>
+    </object>
+    <object name="Sewer 3">
+      <inherit name="editor_room" />
+      <alias>Sewer</alias>
+      <enter type="script">
+        msg ("The walls are covered in filth")
+      </enter>
+      <exit alias="west" to="Sewer 1">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="south" to="Sewer 1">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="north" to="Sewer 5">
+        <inherit name="northdirection" />
+      </exit>
+    </object>
+    <object name="Sewer 4">
+      <inherit name="editor_room" />
+      <alias>Sewer</alias>
+      <enter type="script">
+        msg ("It's disgusting down here.")
+      </enter>
+      <object name="Breeze">
+        <inherit name="editor_object" />
+        <feelfordirectionofbreeze>You feel to see if the breeze seems to be coming from anywhere and it seems to be coming from the north.</feelfordirectionofbreeze>
+        <ignoreit>You continue on your way without paying the breeze any mind.</ignoreit>
+      </object>
+      <exit alias="north" to="Sewer 2">
+        <inherit name="northdirection" />
+      </exit>
+      <exit alias="west" to="Sewer 3">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="east" to="Sewer 6">
+        <inherit name="eastdirection" />
+      </exit>
+    </object>
+    <object name="Sewer 6">
+      <inherit name="editor_room" />
+      <alias>Sewer</alias>
+      <enter type="script">
+        msg ("The smell is near unbearable but you think you can see light at the end of the tunnel and the breeze feels stronger.  it seems as though there may be an exit to the east.")
+      </enter>
+      <exit alias="west" to="Sewer 4">
+        <inherit name="westdirection" />
+      </exit>
+      <exit alias="up" to="train station">
+        <inherit name="updirection" />
+      </exit>
+    </object>
+    <object name="Sewer 5">
+      <inherit name="editor_room" />
+      <alias>Sewer</alias>
+      <exit alias="south" to="Sewer 3">
+        <inherit name="southdirection" />
+      </exit>
+      <exit alias="up" to="Cummys">
+        <inherit name="updirection" />
+      </exit>
+    </object>
+  </object>
+  <object name="Cummys">
+    <inherit name="editor_room" />
+    <descprefix>You are in </descprefix>
+    <attr name="grid_fill">Red</attr>
+    <exit alias="north" to="straight ghetto">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="south" to="straight ghetto">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="down" to="Sewer 5">
+      <inherit name="downdirection" />
+    </exit>
+    <object name="Milwaukees Best">
+      <inherit name="editor_object" />
+      <inherit name="edible" />
+      <alt type="stringlist">
+        <value>Beast</value>
+      </alt>
+      <linkcolour>Beige</linkcolour>
+      <displayverbs type="stringlist">
+        <value>Take</value>
+      </displayverbs>
+      <feature_usegive />
+      <feature_edible />
+      <eatmsg>You drank the entire case. You are wasted. Good luck standing.</eatmsg>
+      <inventoryverbs type="stringlist">
+        <value>Look at</value>
+        <value>Use</value>
+        <value>Drop</value>
+        <value>Drink</value>
+      </inventoryverbs>
+    </object>
+    <object name="Miller Light Case">
+      <inherit name="editor_object" />
+      <take />
+      <takemsg>You have some beer, maybe someone will want this.</takemsg>
+      <feature_usegive />
+      <givetoanything type="script">
+      </givetoanything>
+      <giveto type="scriptdictionary" />
+    </object>
+  </object>
+  <verb>
+    <property>askaboutstudenti.d.</property>
+    <pattern>ask about student i.d.</pattern>
+    <defaultexpression>"You can't ask about student i.d. " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>askaboutid</property>
+    <pattern>ask about id</pattern>
+    <defaultexpression>"You can't ask about id " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>askwhereyoucouldgetsomethingforher</property>
+    <pattern>ask where you could get something for her</pattern>
+    <defaultexpression>"You can't ask where you could get something for her " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>askhowtogettotrainstation</property>
+    <pattern>ask how to get to train station</pattern>
+    <defaultexpression>"You can't ask how to get to train station " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>walkaway</property>
+    <pattern>walk away</pattern>
+    <defaultexpression>"You can't walk away " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>exchangeforidcard</property>
+    <pattern>exchange for id card</pattern>
+    <defaultexpression>"You can't exchange for id card " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>talktoguy</property>
+    <pattern>talk to guy</pattern>
+    <defaultexpression>"You can't talk to guy " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>buyweed</property>
+    <pattern>buy weed</pattern>
+    <defaultexpression>"You can't buy weed " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>noi'mgood.</property>
+    <pattern>no i'm good.</pattern>
+    <defaultexpression>"You can't no i'm good. " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>noi'mgood</property>
+    <pattern>no i'm good</pattern>
+    <defaultexpression>"You can't no i'm good " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>nah.</property>
+    <pattern>nah.</pattern>
+    <defaultexpression>"You can't nah. " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>nah</property>
+    <pattern>nah</pattern>
+    <defaultexpression>"You can't nah " + object.article + "."</defaultexpression>
+  </verb>
+  <function name="javascriptTest">
+  </function>
+</asl>
