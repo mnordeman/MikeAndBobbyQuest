@@ -20,12 +20,6 @@
       picture ("mcpoyles.jpg")
       msg ("You are a loser. You been stabbed.")
     </enter>
-    <exit alias="south" to="Cummys">
-      <inherit name="southdirection" />
-    </exit>
-    <exit alias="north" to="Cummys">
-      <inherit name="northdirection" />
-    </exit>
   </object>
   <verb>
     <property>dropbookoff</property>
@@ -125,7 +119,7 @@
           msg ("You are free to leave campus.")
         }
       </enter>
-      <exit alias="Go behind Beury hall to Narnia" to="Narnia">
+      <exit alias="Go behind Beury hall " to="Narnia">
         <inherit name="northdirection" />
       </exit>
       <object name="Player">
@@ -168,11 +162,27 @@
       <exit name="Take Polett walk West" alias="Take Polett Walk West" to="Liacouras Walk">
         <inherit name="westdirection" />
       </exit>
+      <object name="bell tower">
+        <inherit name="editor_object" />
+        <scenery />
+        <look>The tower sits in the center of the little plaza type thing.  There is a group of people protesting something or other and a guy with a megaphone yelling about religion or something. </look>
+      </object>
+      <object name="Buildings1">
+        <inherit name="editor_object" />
+        <alias>Buildings</alias>
+        <alt type="stringlist">
+          <value>beury</value>
+          <value>anderson</value>
+          <value>paley</value>
+        </alt>
+        <look>You look around and see beury.  Pretty old, probably going to be replaced soon.  You see anderson with a stream of people walking under the arch.  You also notice paley library which reminds you that you have a book you need to return.</look>
+      </object>
     </object>
     <object name="Narnia">
       <inherit name="editor_room" />
       <descprefix>You are in</descprefix>
       <objectslistprefix>You can see a bong on a table</objectslistprefix>
+      <description>You walk to the small grassy area.  The smell of bud fills the air.</description>
       <exit alias="Go back to Bell Tower" to="Bell Tower">
         <inherit name="southdirection" />
       </exit>
@@ -204,6 +214,24 @@
       <exit alias="Head West on Norris" to="Liacouras Walk">
         <inherit name="southwestdirection" />
       </exit>
+      <object name="Beury">
+        <inherit name="editor_object" />
+        <scenery />
+        <alt type="stringlist">
+          <value>Hall</value>
+          <value>Building</value>
+        </alt>
+        <look>You see the back of Beury Hall.  It still looks old.</look>
+      </object>
+      <object name="Bench">
+        <inherit name="editor_object" />
+        <scenery />
+        <look>You see a couple of benches attached to tables.  A few people are sitting around them smoking.  Only really notable things are a bong sitting on a table and a guy sitting at another that definitely looks like a dealer.  </look>
+        <alt type="stringlist">
+          <value>tables</value>
+          <value>people</value>
+        </alt>
+      </object>
     </object>
   </object>
   <verb>
@@ -252,12 +280,34 @@
         <askwhathewants type="script"><![CDATA[
           msg ("You: Hey man, what's up?<br/>Homeless Guy: Got any weed or drinks ? I could make it worth your while.")
         ]]></askwhathewants>
-        <exchangeforidcard type="script">
-          if (Got(Bag O Weed)) {
+        <bestowthemanwithsomemillers type="script"><![CDATA[
+          if (Got(Miller Light Case)) {
             MoveObject (ID card, Player)
-            MoveObject (Bag O Weed, Homeless Guy)
+            MoveObject (Miller Light Case, Homeless Guy)
+            msg ("You: Here you go.<br/>Homeless Guy: Thank you.  Would you want this student ID I found?<br/>You: Sure, thanks man.")
           }
-        </exchangeforidcard>
+          else if (not Got(Miller Light Case)) {
+            msg ("You don't have millers to give.")
+          }
+        ]]></bestowthemanwithsomemillers>
+        <lethimhavesomebeast type="script">
+          if (Got(Milwaukees Best)) {
+            msg ("Homeless Guy:  Sorry man I don't even want that, I have some standards.")
+          }
+          else if (not Got(Milwaukees Best)) {
+            msg ("You don't have any milwaukees Best")
+          }
+        </lethimhavesomebeast>
+        <handbagoweedtohomelessguy type="script"><![CDATA[
+          if (Got(Bag O Weed)) {
+            MoveObject (Bag O Weed, Homeless Guy)
+            MoveObject (ID card, Player)
+            msg ("You: Here you go.<br/>Homeless Guy: Thanks.  In exchange for your kindness you can have this ID card I found, it kind of looks like you.<br/>You: Thanks man")
+          }
+          else if (not Got(Bag O Weed)) {
+            msg ("You don't have any reefer to give him.")
+          }
+        ]]></handbagoweedtohomelessguy>
         <object name="ID card">
           <inherit name="editor_object" />
           <feature_usegive />
@@ -297,7 +347,9 @@
         <displayverbs type="stringlist">
           <value>Look at</value>
         </displayverbs>
-        <look>You see a lot of people in maxis even though it's the middle of the day.  </look>
+        <look type="script">
+          msg ("")
+        </look>
       </object>
       <object name="seven eleven">
         <inherit name="editor_object" />
@@ -314,6 +366,19 @@
         <alt type="stringlist">
           <value>students</value>
           <value>walking</value>
+        </alt>
+      </object>
+      <object name="Buildings">
+        <inherit name="editor_object" />
+        <scenery />
+        <look>You can see Barton, Peabody, Mittenhall, and Johnson and Hardwick.  They all look pretty much how they always do.  </look>
+        <alt type="stringlist">
+          <value>Barton</value>
+          <value>Peabody</value>
+          <value>Hall</value>
+          <value>Johnson</value>
+          <value>Hardwick</value>
+          <value>Mitten</value>
         </alt>
       </object>
     </object>
@@ -348,7 +413,7 @@
     <exit alias="south" to="straight ghetto">
       <inherit name="southdirection" />
     </exit>
-    <exit name="Go back to Liacouras Walk" alias="down" to="Liacouras Walk">
+    <exit name="Go back to Liacouras Walk" alias="Go Back to Liacouras Walk" to="Liacouras Walk">
       <inherit name="downdirection" />
     </exit>
     <object name="Milwaukees Best">
@@ -370,6 +435,8 @@
         <value>Drop</value>
         <value>Drink</value>
       </inventoryverbs>
+      <take />
+      <takemsg>You bought a case of the Beast</takemsg>
     </object>
     <object name="Miller Light Case">
       <inherit name="editor_object" />
@@ -445,6 +512,26 @@
     <property>askwhathewants</property>
     <pattern>ask what he wants</pattern>
     <defaultexpression>"You can't ask what he wants " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>handbagoweedtohomelessguy</property>
+    <pattern>hand bag o weed to homeless guy</pattern>
+    <defaultexpression>"You can't hand bag o weed to homeless guy " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>bestowthemanwithsomebooze</property>
+    <pattern>bestow the man with some booze</pattern>
+    <defaultexpression>"You can't bestow the man with some booze " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>bestowthemanwithsomemillers</property>
+    <pattern>bestow the man with some millers</pattern>
+    <defaultexpression>"You can't bestow the man with some millers " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lethimhavesomebeast</property>
+    <pattern>let him have some beast</pattern>
+    <defaultexpression>"You can't let him have some beast " + object.article + "."</defaultexpression>
   </verb>
   <function name="javascriptTest">
   </function>
