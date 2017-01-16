@@ -177,6 +177,7 @@
         </alt>
         <look>You look around and see beury.  Pretty old, probably going to be replaced soon.  You see anderson with a stream of people walking under the arch.  You also notice paley library which reminds you that you have a book you need to return.</look>
       </object>
+      <exit alias="Take a right at Anderson" to="straight ghetto" />
     </object>
     <object name="Narnia">
       <inherit name="editor_room" />
@@ -381,6 +382,12 @@
           <value>Mitten</value>
         </alt>
       </object>
+      <exit alias="northwest" to="straight ghetto">
+        <inherit name="northwestdirection" />
+      </exit>
+      <exit alias="southwest" to="straight ghetto">
+        <inherit name="southwestdirection" />
+      </exit>
     </object>
   </object>
   <verb>
